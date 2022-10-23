@@ -13,6 +13,7 @@ from ..crawlers.Bunkr_Spider import BunkrCrawler
 from ..crawlers.Coomer_Spider import CoomerCrawler
 from ..crawlers.Cyberdrop_Spider import CyberdropCrawler
 from ..crawlers.Cyberfile_Spider import CyberfileCrawler
+from ..crawlers.Direct_Spider import DirectCrawler
 from ..crawlers.Erome_Spider import EromeCrawler
 from ..crawlers.Gfycat_Spider import GfycatCrawler
 from ..crawlers.GoFile_Spider import GofileCrawler
@@ -55,6 +56,7 @@ class ScrapeMapper:
         self.cyberdrop_crawler = None
         self.coomer_crawler = None
         self.cyberfile_crawler = None
+        self.direct_crawler = None
         self.erome_crawler = None
         self.gfycat_crawler = None
         self.gofile_crawler = None
@@ -79,10 +81,10 @@ class ScrapeMapper:
         self.mapping = {"anonfiles.com": self.Anonfiles, "bayfiles": self.Anonfiles, "xbunkr": self.XBunkr,
                         "bunkr": self.Bunkr, "coomer.party": self.Coomer, "cyberdrop": self.Cyberdrop,
                         "cyberfile.is": self.Cyberfile, "erome.com": self.Erome, "gfycat.com": self.Gfycat,
-                        "gofile.io": self.GoFile, "img.kiwi": self.ShareX, "jpg.church": self.ShareX,
+                        "gofile.io": self.GoFile, "img.kiwi": self.ShareX, "imgur.com": self.Direct, "jpg.church": self.ShareX,
                         "kemono.party": self.Kemono, "pixeldrain.com": self.Pixeldrain, "pixl.is": self.ShareX,
-                        "postimg": self.Postimg, "redgifs.com": self.Redgifs, "rule34.xxx": self.Rule34,
-                        "saint.to": self.Saint, "socialmediagirls": self.SocialMediaGirls,
+                        "postimg": self.Postimg, "redd.it": self.Direct, "redgifs.com": self.Redgifs,
+                        "rule34.xxx": self.Rule34, "saint.to": self.Saint, "socialmediagirls": self.SocialMediaGirls,
                         "simpcity": self.SimpCity, "xbunker": self.XBunker}
 
     async def Anonfiles(self, url: URL, title=None):
@@ -202,6 +204,18 @@ class ScrapeMapper:
             await domain_obj.append_title(title)
         await self.Cascade.add_albums(domain_obj)
         await postimg_session.exit_handler()
+
+    async def Direct(self, url: URL, title=None):
+        direct_session = Session(self.client)
+        if not self.reddit_crawler:
+            self.reddit_crawler = DirectCrawler()
+        content_url = await self.reddit_crawler.fetch(direct_session, url)
+        if content_url:
+            if title:
+                await self.Cascade.add_to_album("direct", f"{title}/images", content_url, url)
+            else:
+                await self.Cascade.add_to_album("direct", "images", content_url, url)
+        await direct_session.exit_handler()
 
     async def Redgifs(self, url: URL, title=None):
         redgifs_session = Session(self.client)

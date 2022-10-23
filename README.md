@@ -116,6 +116,6 @@ optional arguments:
   --throttle                this is a throttle between requests during the downloading phase, the number is in seconds
   --proxy                   HTTP/HTTPS proxy used for downloading, format [protocal]://[ip]:[port]
 ```
---skip can use: "anonfiles", "bayfiles", "bunkr", "coomer.party", "cyberdrop", "cyberfile", "erome", "gfycat", "gofile",
+--skip can use: "anonfiles", "bayfiles", "bunkr", "coomer.party", "cyberdrop", "cyberfile", "direct", "erome", "gfycat", "gofile",
         "jpg.church", "kemono.party", "pixeldrain", "pixl.is", "postimg.cc", "redgifs", "saint", "socialmediagirls", "simpcity", "xbunker", "xbunkr"
 
